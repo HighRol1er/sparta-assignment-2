@@ -42,8 +42,16 @@ it('장바구니에 포함된 아이템들의 이름, 수량, 합계가 제대�
   const dataRows = rows.slice(1); // 헤더 행을 제외한 데이터 행을 선택
 
   const [firstItem, secondItem] = dataRows;
-
   // Assert: 첫 번째 아이템의 이름, 수량, 합계 금액을 확인합니다.
+  const firstItemCells = within(firstItem).getAllByRole('cell');
+  console.log(firstItem);
+  console.log(firstItemCells.length);
+  console.log(firstItemCells.map((cell) => cell.textContent));
+  // [ '', 'Handmade Cotton Fish', '3', '₩2,427', '' ]
+
+  expect(firstItemCells[1]).toHaveTextContent('Handmade Cotton Fish');
+  expect(firstItemCells[2]).toHaveTextContent('3');
+  expect(firstItemCells[3]).toHaveTextContent('₩2,427');
 
   // Assert: 두 번째 아이템의 이름, 수량, 합계 금액을 확인합니다.
 });

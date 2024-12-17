@@ -1,4 +1,6 @@
+import { beforeEach, describe, it } from 'vitest';
 import { debounce, pick } from '../common';
+import { L } from 'vitest/dist/chunks/reporters.DAfKSDh5';
 
 describe('pick 유틸리티 단위 테스트', () => {
   /**
@@ -14,8 +16,14 @@ describe('pick 유틸리티 단위 테스트', () => {
     };
 
     // Act: `pick` 함수 호출
-
+    const result1 = pick(obj, 'a');
+    const result2 = pick(obj, 'b');
+    const result3 = pick(obj, 'd');
+    // const result2 =pick(obj, )
     // Assert: 결과가 예상한 객체와 일치하는지 확인
+    expect(result1).toEqual({ a: 'A' });
+    expect(result2).toEqual({ b: { c: 'C' } });
+    expect(result3).toEqual({ d: null });
   });
 
   /**
@@ -31,8 +39,12 @@ describe('pick 유틸리티 단위 테스트', () => {
     };
 
     // Act: `pick` 함수 호출
+    const result1 = pick(obj, 'a', 'b');
+    const result2 = pick(obj, 'a', 'd');
 
     // Assert: 결과가 예상한 객체와 일치하는지 확인
+    expect(result1).toEqual({ a: 'A', b: { c: 'C' } });
+    expect(result2).toEqual({ a: 'A', d: null });
   });
 
   /**
@@ -48,8 +60,9 @@ describe('pick 유틸리티 단위 테스트', () => {
     };
 
     // Act: `pick` 함수 호출 (키 미지정)
-
+    const result = pick(obj);
     // Assert: 결과가 빈 객체인지 확인
+    expect(result).toEqual({});
   });
 
   /**
@@ -64,6 +77,9 @@ describe('pick 유틸리티 단위 테스트', () => {
     };
 
     // Act & Assert: `pick` 함수 호출 시 에러가 발생하는지 확인
+    // expect(() => pick(obj, 'k')).toThrow(
+    //   'Error'
+    // );
   });
 });
 
@@ -85,10 +101,11 @@ describe('debounce 유틸리티 단위 테스트', () => {
     // Arrange: 스파이 함수와 debounce 함수 생성
     const spy = vi.fn();
     const debouncedFn = debounce(spy, 300);
-
     // Act: debounce 함수 호출 및 시간 진행
-
+    debouncedFn();
+    vi.advanceTimersByTime(300);
     // Assert: 스파이 함수가 호출되었는지 확인
+    expect(spy);
   });
 
   /**
@@ -102,14 +119,18 @@ describe('debounce 유틸리티 단위 테스트', () => {
 
     // Act: debounce 함수 여러 번 호출 및 시간 진행
     debouncedFn(); // 호출 1
-
+    vi.advanceTimersByTime(100);
     debouncedFn(); // 호출 2
+    vi.advanceTimersByTime(150);
 
     debouncedFn(); // 호출 3
+    vi.advanceTimersByTime(200);
 
     debouncedFn(); // 호출 4
+    vi.advanceTimersByTime(300);
 
     // Assert: 스파이 함수가 단 한 번만 호출되었는지 확인
+    expect(spy).toHaveBeenCalledTimes(1);
   });
 
   /**
@@ -122,7 +143,9 @@ describe('debounce 유틸리티 단위 테스트', () => {
     const debouncedFn = debounce(spy, 300);
 
     // Act: debounce 함수 호출 및 시간 일부 진행
-
+    debouncedFn();
+    vi.advanceTimersByTime(200);
     // Assert: 스파이 함수가 아직 호출되지 않았는지 확인
+    expect(spy).not.toHaveBeenCalled();
   });
 });
